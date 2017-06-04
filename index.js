@@ -5,7 +5,8 @@ const fb = require('./facebook-login')
 
 function sendFacebookMessage(api, friends) {
     return new Promise((resolve, reject) => {
-        let today = new Date().toISOString().substr(0, 10)
+        let today = new Date(new Date().valueOf() - new Date().getTimezoneOffset()*60000).toISOString().substr(0, 10)
+        console.log('Today: ' + today)
 
         let message = bs.getBibleStudy(today).msg
 

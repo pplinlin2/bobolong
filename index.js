@@ -5,13 +5,13 @@ const fb = require('./facebook-login')
 
 function sendFacebookMessage(api, friends) {
     return new Promise((resolve, reject) => {
-        // let today = new Date().toISOString().substr(0, 10)
-        let today = '2017-06-06'
+        let today = new Date().toISOString().substr(0, 10)
 
         let message = bs.getBibleStudy(today).msg
 
+        console.log(friends)
         friends.map((friend) => {
-            // api.sendMessage('hola', friend.userID)
+            api.sendMessage(message, friend.userID)
             console.log(`Send message to ${friend.fullName}`)
         })
 

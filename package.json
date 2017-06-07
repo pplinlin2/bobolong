@@ -6,11 +6,12 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.1",
     "facebook-chat-api": "^1.4.0",
-    "marked": "^0.3.6"
+    "marked": "^0.3.6",
+    "require": "^2.4.20"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node index.js", 
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -2,7 +2,7 @@ const login = require("facebook-chat-api")
 const fs = require("fs")
 const config = require("./config")
 
-function loginFacebook() {
+async function loginFacebook() {
     return new Promise((resolve, reject) => {
         try {
             let appstate_fs = fs.readFileSync("appstate.json", "utf8")

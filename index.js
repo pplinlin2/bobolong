@@ -3,14 +3,16 @@ const fs = require("fs")
 const bs = require("./bible-study")
 const fb = require('./facebook-login')
 
-function sendFacebookMessage(api, friends) {
-    return new Promise((resolve, reject) => {
+async function sendFacebookMessage(api, friends) {
+    return new Promise(async (resolve, reject) => {
         let today = new Date(new Date().valueOf() - new Date().getTimezoneOffset()*60000).toISOString().substr(0, 10)
         console.log('Today: ' + today)
 
-        let message = bs.getBibleStudy(today).msg
+        let result = await bs.getBibleStudy(today)
+        let message = result.msg
 
-        console.log(friends)
+        // console.log(friends)
+        // console.log(message)
         friends.map((friend) => {
             api.sendMessage(message, friend.userID)
             console.log(`Send message to ${friend.fullName}`)
@@ -20,7 +22,7 @@ function sendFacebookMessage(api, friends) {
     })
 }
 
-function getFriends(api) {
+async function getFriends(api) {
     return new Promise((resolve, reject) => {
         api.getFriendsList((err, data) => {
             if(err) { reject(err) }
@@ -33,21 +35,19 @@ function getFriends(api) {
     })
 }
 
-let tools = {}
-fb.loginFacebook()
-.then((api) => {
-    tools.api = api
-    console.log('Login facebook successful')
-    return getFriends(api)
-})
-.then((friends) => {
-    tools.friends = friends
-    console.log('Get friend list successful')
-    return sendFacebookMessage(tools.api, friends)
-})
-.then(() => {
-    console.log('Message send successful')
-})
-.catch((error) => {
-    console.error(error)
-})
+const main = async () => {
+    try {
+        let api = await fb.loginFacebook()
+        console.log('Login facebook successful')
+
+        let friends = await getFriends(api)
+        console.log('Get friend list successful')
+
+        await sendFacebookMessage(api, friends)
+        console.log('Message send successful')
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+main()

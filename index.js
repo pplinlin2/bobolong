@@ -1,49 +1,27 @@
-const login = require("facebook-chat-api")
-const fs = require("fs")
-const bs = require("./bible-study")
-const fb = require('./facebook-login')
-
-async function sendFacebookMessage(api, friends) {
-    return new Promise(async (resolve, reject) => {
-        let today = new Date(new Date().valueOf() - new Date().getTimezoneOffset()*60000).toISOString().substr(0, 10)
-        console.log('Today: ' + today)
-
-        let result = await bs.getBibleStudy(today)
-        let message = result.msg
-
-        // console.log(friends)
-        // console.log(message)
-        friends.map((friend) => {
-            api.sendMessage(message, friend.userID)
-            console.log(`Send message to ${friend.fullName}`)
-        })
-
-        resolve()
-    })
-}
-
-async function getFriends(api) {
-    return new Promise((resolve, reject) => {
-        api.getFriendsList((err, data) => {
-            if(err) { reject(err) }
-            let friends = data.map((elem) => ({
-                fullName: elem.fullName, 
-                userID: elem.userID
-            }))
-            resolve(friends)
-        })
-    })
-}
+const fb = require('./lib/facebook.js')
+const msg = require('./lib/messages.js')
+const utils = require('./lib/utils.js')
 
 const main = async () => {
     try {
-        let api = await fb.loginFacebook()
+        let today = await utils.getDate()
+        console.log('Get date successful')
+
+        let api = await fb.signIn()
         console.log('Login facebook successful')
 
-        let friends = await getFriends(api)
+        let friends = await fb.getFriends(api)
         console.log('Get friend list successful')
 
-        await sendFacebookMessage(api, friends)
+        let { msg: bibleStudy } = await msg.getBibleStudy(today)
+        console.log('Get bible schedule successful')
+
+        let weather = await msg.getWeather()
+        console.log('Get weather successful')
+
+        let message = `【讀經進度】\n${bibleStudy}\n\n【天氣小幫手(測試中)】\n${weather}`
+
+        await fb.sendMessageToFriends(api, message, friends)
         console.log('Message send successful')
     } catch (error) {
         console.error(error)

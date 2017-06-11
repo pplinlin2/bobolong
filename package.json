@@ -10,10 +10,12 @@
     "request": "^2.81.0",
     "require": "^2.4.20"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^4.0.2"
+  },
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC"

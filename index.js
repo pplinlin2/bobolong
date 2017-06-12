@@ -19,7 +19,7 @@ const main = async () => {
         let weather = await msg.getWeather()
         console.log('Get weather successful')
 
-        let message = `【讀經進度】\n${bibleStudy}\n\n【天氣小幫手(測試中)】\n${weather}`
+        let message = `【讀經進度】\n${bibleStudy}\n\n【天氣小幫手】\n${weather}`
 
         await fb.sendMessageToFriends(api, message, friends)
         console.log('Message send successful')
